@@ -1,4 +1,4 @@
-#include "QtWidgetsApplication8.h"
+#include "widget.h"
 #include <QFileDialog>
 #include <QTextStream>
 #include <QDebug>
@@ -15,20 +15,12 @@ Widget::Widget(QWidget* parent)
 
     connect(m_pBtn, &QPushButton::clicked, this, [this]()
         {
-            //  openFileDialog();
-             //QString sor = "~/Qt_Project/demo/Demo_3/untitled111/img.qrc";
-
-             //QString sorcp = "~/Qt_Project/demo/Demo_3/untitled111/imgCp.qrc";
-              // 获取用户主目录路径
-            QString homePath = QDir::homePath();
-            QString sor = homePath + "/img.qrc";
-            QString sorcp = homePath + "/imgCp.qrc";
-
-
             openFileDialog();
             LoadProPathFile(m_strProjectFilePath);
-            m_strCurrentOperationPath = m_strProjectFilePath + "/../aa";
-            WriteQRCFile(m_strCurrentOperationPath);
+            QFileInfo fileInfo(m_strProjectFilePath);
+            QString strQrcFileName = fileInfo.absolutePath() +
+             QString("/%1/%2.qrc").arg(m_VecProFileDir[0]).arg(m_VecProFileDir[0]);
+            WriteQRCFile(strQrcFileName);
 
         });
 }
@@ -39,19 +31,15 @@ void Widget::openFileDialog()
     m_strProjectFilePath = QFileDialog::getOpenFileName(this,
         "Select File",
         "",
-        "All Files (*);;Text Files (*.txt)");
+        "Text Files (*.pro)");
     if (!m_strProjectFilePath.isEmpty())
     {
         m_pFileLabel->setText(m_strProjectFilePath);
-
-
     }
     else
     {
         m_pFileLabel->setText("No file selected");
     }
-
-
 }
 
 void Widget::ReadImgProFile()
@@ -105,9 +93,11 @@ void Widget::LoadProPathFile(const QString& strRootPath)
     QTextStream in(&file);
     while (!in.atEnd()) {
         QString line = in.readLine();
-        m_VecProFileDir.append(line);
-        qDebug() << "Line read:" << line;
-        // 在这里可以对每行数据进行处理
+        if(line.contains("SUBDIRS += "))
+        {
+            line.remove("SUBDIRS += ");
+            m_VecProFileDir.append(line);
+        }
     }
 
 }
@@ -115,8 +105,6 @@ void Widget::LoadProPathFile(const QString& strRootPath)
 bool Widget::bFileContainsQrc(const QString& strQRCFilePath)
 {
     QDir directory(strQRCFilePath);
-    // (QDir::Dirs | QDir::NoDotAndDotDot);
-    //(QDir::Files);
 
   // 获取当前目录中的所有文件
     QStringList files = directory.entryList(QDir::Files);
@@ -124,9 +112,6 @@ bool Widget::bFileContainsQrc(const QString& strQRCFilePath)
         if (file.contains(".qrc"))
         {
             return true;
-            // QString str33 = file.section('/', -1, -1);
-            // m_VecQrcName.append(file.section('/', -1, -1));
-           //  qDebug() <<str33;
         }
         return false;
     }
@@ -135,22 +120,16 @@ bool Widget::bFileContainsQrc(const QString& strQRCFilePath)
 
 void Widget::WriteQRCFile(const QString& strQRCFilePath)
 {
-    //判断是否存在qrc文件
-    if (!bFileContainsQrc(strQRCFilePath))
-    {
-        return;
-    }
+     QFileInfo fileInfo(strQRCFilePath);
 
-
-    QFile file("F:/img/aa/111.qrc");
+      QFile file(fileInfo.filePath());
 
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
         qDebug() << "Failed to open file:" << file.errorString();
         return;
     }
 
-    QStringList strlist;
-    QDir directory(strQRCFilePath);
+    QDir directory(fileInfo.absolutePath());
     // 创建文本流
     QTextStream out(&file);
     out.setCodec("UTF-8");
@@ -159,19 +138,27 @@ void Widget::WriteQRCFile(const QString& strQRCFilePath)
     qDebug() <<fileList;
 
     //文件
-    const QString& strQccHend = "<RCC>";
-    out << strQccHend << "\n";
+    out << "<RCC>" << "\n";
+    QString strqresource = "/";
+    QString strWrte = QString("    <qresource prefix = \"%1\">").arg(strqresource);
+    out << strWrte <<"\n";
 
     QStringList files;
     listAllFilesAndFolders(directory, files);
     foreach(QString file, files) {
-        out <<"<file>" << file << "</file>" << "\n";
+        if(file.contains("png") || file.contains("gif"))
+        {
+
+            QString strWirte = file.remove(0,fileInfo.absolutePath().length());
+           qDebug() << strWirte;
+            out <<"\t<file>" <<strWirte << "</file>" << "\n";
+        }
+
     }
 
-
+     out << "    </qresource>" << "\n";
     //文件结束
-    const QString& strQccTail = "</RCC>";
-    out << strQccTail << "\n";
+    out << "</RCC>" << "\n";
     file.close();
 
 }
