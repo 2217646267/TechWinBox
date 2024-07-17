@@ -6,6 +6,8 @@
 #include <QMap>
 #include <QVector>
 #include <QDir>
+#include <QCheckBox>
+#include "CheckboxWidget.h"
 
 class QrcFeatureWidget : public QWidget
 {
@@ -35,4 +37,12 @@ private:
 
 	//资源工程pro文件
 	QString m_strProFilePath;
+    //子类节点容器
+    QVector<QCheckBox*> m_VctCheckbox;
+    //父类节点
+    QCheckBox* m_pPaterBox = nullptr;
+     int m_number = 0;
+    CheckboxWidget* m_CheckboxWidget = nullptr;
+
+     void slotsss();
 };

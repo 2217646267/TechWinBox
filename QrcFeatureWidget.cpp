@@ -3,6 +3,7 @@
 #include <QFileDialog>
 #include <QDebug>
 
+
 QrcFeatureWidget::QrcFeatureWidget(QWidget *parent)
 	: QWidget(parent)
 {
@@ -13,36 +14,63 @@ QrcFeatureWidget::QrcFeatureWidget(QWidget *parent)
 void QrcFeatureWidget::init()
 {
 	m_pBtn = new QPushButton(this);
-	m_pBtn->setGeometry(50, 50, 100, 100);
-	m_pBtn->setText("ProFile");
+    m_pBtn->setGeometry(50, 50, 100, 100);
+    m_pBtn->setText("ProFile");
+
+    m_pOkBtn = new QPushButton(this);
+    m_pOkBtn->setGeometry(200, 50, 100, 100);
+    m_pOkBtn->setText("ok");
+
 	m_pFileLabel = new QLabel("No file selected", this);
 	m_pFileLabel->resize(800, 50);
 	m_pFileLabel->setWordWrap(true);
+
+    m_CheckboxWidget = new CheckboxWidget(this);
+    m_CheckboxWidget->hide();
+    m_CheckboxWidget->move(0,400);
 }
 
+ void QrcFeatureWidget::slotsss()
+{
+     openFileDialog();
+     LoadProPathFile(m_strProFilePath);
+     m_CheckboxWidget->show();
+     m_CheckboxWidget->InstallCheckbox(m_VecProFileDir);
 
+     // if (!m_strProFilePath.isEmpty())
+     // {
+
+     //     QFileInfo fileInfo(m_strProFilePath);
+     //     for (auto val : m_VecProFileDir)
+     //     {
+     //         if (!val.isEmpty())
+     //         {
+     //             QString strQrcFilePath = fileInfo.absolutePath() +
+     //                                      QString("/%1/%2.qrc").arg(val).arg(val);
+     //             WriteQRCFile(strQrcFilePath);
+     //         }
+     //     }
+
+     // }
+
+ }
+
+  void QrcFeatureWidget::slotOk()
+ {
+      QString strBoxFile = m_CheckboxWidget->GetCurrentBox();
+      if (!strBoxFile.isEmpty())
+      {
+          QFileInfo fileInfo(m_strProFilePath);
+          QString strQrcFilePath = fileInfo.absolutePath() +
+                                   QString("/%1/%2.qrc").arg(strBoxFile).arg(strBoxFile);
+          WriteQRCFile(strQrcFilePath);
+      }
+  }
 void QrcFeatureWidget::initConnect()
 {
-	connect(m_pBtn, &QPushButton::clicked, this, [this]()
-		{
-			openFileDialog();
-			if (!m_strProFilePath.isEmpty())
-			{
-				LoadProPathFile(m_strProFilePath);
-				QFileInfo fileInfo(m_strProFilePath);
+    connect(m_pBtn, &QPushButton::clicked, this,&QrcFeatureWidget::slotsss);
+     connect(m_pOkBtn, &QPushButton::clicked, this,&QrcFeatureWidget::slotOk);
 
-				for (auto val : m_VecProFileDir)
-				{
-					if (!val.isEmpty())
-					{
-						QString strQrcFilePath = fileInfo.absolutePath() +
-							QString("/%1/%2.qrc").arg(val).arg(val);
-						WriteQRCFile(strQrcFilePath);
-					}
-				}
-			}
-
-		});
 }
 
 void QrcFeatureWidget::openFileDialog()
@@ -99,13 +127,33 @@ void QrcFeatureWidget::LoadProPathFile(const QString& strProFilePath)
 		}
 	}
 
-	for (auto val : m_VecProFileDir)
-	{
-		if (!val.isEmpty())
-		{
+    /*for (auto val : m_VecProFileDir)
+    {
+        if (!val.isEmpty())
+        {
+            QCheckBox* pSonBox = new QCheckBox(this);
+            pSonBox->setText(QString::fromLocal8Bit("%1").arg(val));
+            m_VctCheckbox.append(pSonBox);
+            connect(pSonBox, &QCheckBox::stateChanged, this, [this, pSonBox](int state)
+                    {
+                        state == Qt::Checked ? m_number++ : m_number--;
 
-		}
-	}
+                        if (m_number == m_VctCheckbox.size())
+                        {
+                            m_pPaterBox->setCheckState(Qt::Checked);
+
+                        }
+                        else if (m_number == 0)
+                        {
+                            m_pPaterBox->setCheckState(Qt::Unchecked);
+                        }
+                        else
+                        {
+                            m_pPaterBox->setCheckState(Qt::PartiallyChecked);
+                        }
+                    });
+        }
+    }*/
 
 }
 
