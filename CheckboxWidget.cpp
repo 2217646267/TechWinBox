@@ -9,31 +9,6 @@ CheckboxWidget::CheckboxWidget(QWidget *parent)
     m_checkBoxLayout = new QHBoxLayout();
 
     setLayout(m_checkBoxLayout);
-
-
-    // connect(value, &QCheckBox::stateChanged, this, [this, value](int state)
-    //         {
-    //             qDebug() << value->text();
-    //             state == Qt::Checked ? m_number++ : m_number--;
-
-    //             if (m_number == m_VctCheckbox.size())
-    //             {
-    //                 m_pPaterBox->setCheckState(Qt::Checked);
-    //             }
-    //             else if (m_number == 0)
-    //             {
-    //                 m_pPaterBox->setCheckState(Qt::Unchecked);
-    //             }
-    //             else
-    //             {
-    //                 m_pPaterBox->setCheckState(Qt::PartiallyChecked);
-    //             }
-    //         });
-
-    // connect(m_pPaterBox, &QCheckBox::clicked, this, [this, value](bool checked)
-    //         {
-    //             checked == 0 ? value->setCheckState(Qt::Unchecked) : value->setCheckState(Qt::Checked);
-    //         });
 }
 
 void CheckboxWidget::InstallCheckbox(QVector<QString> vet)
@@ -62,31 +37,25 @@ QString CheckboxWidget::GetCurrentBox()
 
 void CheckboxWidget::ClickedItem(int state)
 {
-     state == Qt::Checked ? m_number++ : m_number--;
-
     QCheckBox *Checkbox = qobject_cast<QCheckBox*>(sender());
-     m_strCurentBox = Checkbox->text();
+    m_strCurentBox = Checkbox->text();
 
-        if (state == 2)
-        {
-             m_MapCheckbox.value(m_strCurentBox)->setCheckState(Qt::Checked);
-        }
-        else if (m_number == 0)
-        {
-            m_MapCheckbox.value(m_strCurentBox)->setCheckState(Qt::Unchecked);
-        }
-        if(m_number == m_MapCheckbox.size())
-        {
-            m_pPaterBox->setCheckState(Qt::Checked);
-        }
-        else if(m_number == 0)
-        {
-            m_MapCheckbox.value(m_strCurentBox)->setCheckState(Qt::Unchecked);
-        }
-        else
-        {
-            m_MapCheckbox.value(m_strCurentBox)->setCheckState(Qt::PartiallyChecked);
-        }
+    state == Qt::Checked ? m_number++ : m_number--;
+    state == 2 ? m_MapCheckbox.value(m_strCurentBox)->setCheckState(Qt::Checked) :
+                 m_MapCheckbox.value(m_strCurentBox)->setCheckState(Qt::Unchecked);
+
+    if(m_number == m_MapCheckbox.size())
+    {
+        m_pPaterBox->setCheckState(Qt::Checked);
+    }
+    else if(m_number == 0)
+    {
+        m_pPaterBox->setCheckState(Qt::Unchecked);
+    }
+    else
+    {
+        m_pPaterBox->setCheckState(Qt::PartiallyChecked);
+    }
 
 }
 

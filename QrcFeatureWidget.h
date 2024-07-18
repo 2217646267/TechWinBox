@@ -21,6 +21,7 @@ private:
 	void initConnect();
 private:
 	QPushButton* m_pBtn = nullptr;
+    QPushButton* m_pOkBtn = nullptr;
 	QLabel* m_pFileLabel = nullptr;
 
 	//暂时无用
@@ -45,4 +46,5 @@ private:
     CheckboxWidget* m_CheckboxWidget = nullptr;
 
      void slotsss();
+    void slotOk();
 };

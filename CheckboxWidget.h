@@ -1,10 +1,10 @@
-
 #pragma once
 
 #include <QWidget>
 #include <QBoxLayout>
 #include <QCheckBox>
 #include <QMap>
+#include <QVector>
 
 class CheckboxWidget : public QWidget
 {
