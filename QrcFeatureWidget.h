@@ -24,9 +24,6 @@ private:
     QPushButton* m_pOkBtn = nullptr;
 	QLabel* m_pFileLabel = nullptr;
 
-	//暂时无用
-	void ReadImgProFile();
-
 	void openFileDialog();
 	void WriteQRCFile(const QString& strQRCFilePath);
 	void listAllFilesAndFolders(const QDir& directory, QStringList& fileList);

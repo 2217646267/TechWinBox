@@ -2,7 +2,7 @@
 #include <QTextStream>
 #include <QFileDialog>
 #include <QDebug>
-
+#include <QBoxLayout>
 
 QrcFeatureWidget::QrcFeatureWidget(QWidget *parent)
 	: QWidget(parent)
@@ -13,12 +13,15 @@ QrcFeatureWidget::QrcFeatureWidget(QWidget *parent)
 
 void QrcFeatureWidget::init()
 {
+    this->setMinimumSize(500,200);
+    QVBoxLayout* m_MainBoxLayout = new QVBoxLayout();
+
 	m_pBtn = new QPushButton(this);
-    m_pBtn->setGeometry(50, 50, 100, 100);
     m_pBtn->setText("ProFile");
+    m_pBtn->resize(100, 100);
 
     m_pOkBtn = new QPushButton(this);
-    m_pOkBtn->setGeometry(200, 50, 100, 100);
+    m_pOkBtn->resize(100, 100);
     m_pOkBtn->setText("ok");
 
 	m_pFileLabel = new QLabel("No file selected", this);
@@ -27,7 +30,11 @@ void QrcFeatureWidget::init()
 
     m_CheckboxWidget = new CheckboxWidget(this);
     m_CheckboxWidget->hide();
-    m_CheckboxWidget->move(0,400);
+    m_MainBoxLayout->addWidget(m_pFileLabel);
+    m_MainBoxLayout->addWidget(m_pBtn);
+    m_MainBoxLayout->addWidget(m_pOkBtn);
+    m_MainBoxLayout->addWidget(m_CheckboxWidget);
+    setLayout(m_MainBoxLayout);
 }
 
  void QrcFeatureWidget::slotsss()
@@ -36,23 +43,6 @@ void QrcFeatureWidget::init()
      LoadProPathFile(m_strProFilePath);
      m_CheckboxWidget->show();
      m_CheckboxWidget->InstallCheckbox(m_VecProFileDir);
-
-     // if (!m_strProFilePath.isEmpty())
-     // {
-
-     //     QFileInfo fileInfo(m_strProFilePath);
-     //     for (auto val : m_VecProFileDir)
-     //     {
-     //         if (!val.isEmpty())
-     //         {
-     //             QString strQrcFilePath = fileInfo.absolutePath() +
-     //                                      QString("/%1/%2.qrc").arg(val).arg(val);
-     //             WriteQRCFile(strQrcFilePath);
-     //         }
-     //     }
-
-     // }
-
  }
 
   void QrcFeatureWidget::slotOk()
@@ -119,42 +109,13 @@ void QrcFeatureWidget::LoadProPathFile(const QString& strProFilePath)
 	QTextStream in(&file);
 	m_VecProFileDir.clear();
 	while (!in.atEnd()) {
-		QString line = in.readLine();
-		if (line.contains("SUBDIRS += "))
+        QString line = in.readLine().replace(" ","");
+        if (line.contains("SUBDIRS+="))
 		{
-			line.remove("SUBDIRS += ");
+            line.remove("SUBDIRS+=");
 			m_VecProFileDir.append(line);
 		}
 	}
-
-    /*for (auto val : m_VecProFileDir)
-    {
-        if (!val.isEmpty())
-        {
-            QCheckBox* pSonBox = new QCheckBox(this);
-            pSonBox->setText(QString::fromLocal8Bit("%1").arg(val));
-            m_VctCheckbox.append(pSonBox);
-            connect(pSonBox, &QCheckBox::stateChanged, this, [this, pSonBox](int state)
-                    {
-                        state == Qt::Checked ? m_number++ : m_number--;
-
-                        if (m_number == m_VctCheckbox.size())
-                        {
-                            m_pPaterBox->setCheckState(Qt::Checked);
-
-                        }
-                        else if (m_number == 0)
-                        {
-                            m_pPaterBox->setCheckState(Qt::Unchecked);
-                        }
-                        else
-                        {
-                            m_pPaterBox->setCheckState(Qt::PartiallyChecked);
-                        }
-                    });
-        }
-    }*/
-
 }
 
 void QrcFeatureWidget::WriteQRCFile(const QString& strQRCFilePath)
@@ -201,28 +162,6 @@ void QrcFeatureWidget::WriteQRCFile(const QString& strQRCFilePath)
 	file.close();
 
 }
-
-void QrcFeatureWidget::ReadImgProFile()
-{
-	//    QFile file("");
-	//    QDir directory(strQRCFilePath);
-	//    QStringList fileList = directory.entryList(QDir::Files);
-	//    qDebug() <<fileList;
-	//    return;
-	//    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
-	//        qDebug() << "Failed to open file:" << file.errorString();
-	//        return;
-	//    }
-	//    // 获取当前目录中的所有子目录
-	//    QStringList dirs = directory.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
-	//    foreach (QString dir, dirs) {
-	//        QDir subDir = directory;
-	//        subDir.cd(dir);
-	//    //    listAllFilesAndFolders(subDir, fileList);
-	//    }
-
-}
-
 
 QrcFeatureWidget::~QrcFeatureWidget()
 {

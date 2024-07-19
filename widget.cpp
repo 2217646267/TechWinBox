@@ -5,8 +5,11 @@
 Widget::Widget(QWidget* parent)
     : QWidget(parent)
 {
-    QrcFeatureWidget* widhte = new QrcFeatureWidget(this);
-    widhte->resize(1000,600);
+   QVBoxLayout* m_checkBoxLayout = new QVBoxLayout();
+   QrcFeatureWidget* widhte = new QrcFeatureWidget(this);
+   m_checkBoxLayout->addWidget(widhte);
+   setLayout(m_checkBoxLayout);
+
 }
 
 Widget::~Widget() {}

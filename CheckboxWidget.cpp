@@ -5,7 +5,6 @@
 CheckboxWidget::CheckboxWidget(QWidget *parent)
     : QWidget{parent}
 {
-    this->resize(1000,40);
     m_checkBoxLayout = new QHBoxLayout();
 
     setLayout(m_checkBoxLayout);
