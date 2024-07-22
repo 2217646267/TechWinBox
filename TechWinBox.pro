@@ -10,12 +10,16 @@ CONFIG += c++17
 
 SOURCES += \
     CheckboxWidget.cpp \
+    CpFileName.cpp \
+    DragDropLabel.cpp \
     QrcFeatureWidget.cpp \
     main.cpp \
     widget.cpp
 
 HEADERS += \
     CheckboxWidget.h \
+    CpFileName.h \
+    DragDropLabel.h \
     QrcFeatureWidget.h \
     widget.h
 
