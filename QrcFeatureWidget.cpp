@@ -59,7 +59,7 @@ void QrcFeatureWidget::init()
 void QrcFeatureWidget::initConnect()
 {
     connect(m_pBtn, &QPushButton::clicked, this,&QrcFeatureWidget::slotsss);
-     connect(m_pOkBtn, &QPushButton::clicked, this,&QrcFeatureWidget::slotOk);
+    connect(m_pOkBtn, &QPushButton::clicked, this,&QrcFeatureWidget::slotOk);
 
 }
 
