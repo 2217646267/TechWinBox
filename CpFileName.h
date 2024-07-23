@@ -19,12 +19,14 @@ private:
     void connect();
     DragDropLabel* m_pLeftWidget;
     DragDropLabel* m_pRightWidget;
-
+    QList<QUrl> OldurlList;
      QList<QUrl> m_urlList;
+    QMap<QString, QString> m_MapOldNewName;
 signals:
 
 public slots:
-     void test1(QDropEvent *event);
+     void New(QDropEvent *event);
+    void Old(QDropEvent *event);
 };
 
 #endif // CPFILENAME_H
