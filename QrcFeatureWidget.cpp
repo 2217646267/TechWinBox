@@ -3,12 +3,14 @@
 #include <QFileDialog>
 #include <QDebug>
 #include <QBoxLayout>
+#include <QLabel>
+#include <QStyle>
 
 QrcFeatureWidget::QrcFeatureWidget(QWidget *parent)
 	: QWidget(parent)
 {
 	init();
-	initConnect();
+    initConnect();
 }
 
 void QrcFeatureWidget::init()
@@ -24,9 +26,14 @@ void QrcFeatureWidget::init()
     m_pOkBtn->resize(100, 100);
     m_pOkBtn->setText("ok");
 
-	m_pFileLabel = new QLabel("No file selected", this);
+    m_pNumLabel= new QLabel("0",this);
+    m_pNumLabel->resize(800,50);
+    m_pNumLabel->setWordWrap(true);
+
+
+    m_pFileLabel = new QLabel("No file selected", this);
 	m_pFileLabel->resize(800, 50);
-	m_pFileLabel->setWordWrap(true);
+    m_pFileLabel->setWordWrap(true);
 
     m_CheckboxWidget = new CheckboxWidget(this);
     m_CheckboxWidget->hide();
@@ -37,13 +44,16 @@ void QrcFeatureWidget::init()
     setLayout(m_MainBoxLayout);
 }
 
- void QrcFeatureWidget::slotsss()
+void QrcFeatureWidget::slotOpenFile()
 {
-     openFileDialog();
-     LoadProPathFile(m_strProFilePath);
-     m_CheckboxWidget->show();
-     m_CheckboxWidget->InstallCheckbox(m_VecProFileDir);
- }
+        openFileDialog();
+        LoadProPathFile(m_strProFilePath);
+        m_CheckboxWidget->show();
+        m_CheckboxWidget->clearLayout();
+        m_CheckboxWidget->InstallCheckbox(m_VecProFileDir);
+
+
+}
 
   void QrcFeatureWidget::slotOk()
  {
@@ -58,7 +68,7 @@ void QrcFeatureWidget::init()
   }
 void QrcFeatureWidget::initConnect()
 {
-    connect(m_pBtn, &QPushButton::clicked, this,&QrcFeatureWidget::slotsss);
+    connect(m_pBtn, &QPushButton::clicked, this,&QrcFeatureWidget::slotOpenFile);
     connect(m_pOkBtn, &QPushButton::clicked, this,&QrcFeatureWidget::slotOk);
 
 }
@@ -136,7 +146,7 @@ void QrcFeatureWidget::WriteQRCFile(const QString& strQRCFilePath)
 
 	QStringList fileList = directory.entryList(QDir::Files);
 	qDebug() << fileList;
-
+    int nFileNum = 0;
 	//文件
 	out << "<RCC>" << "\n";
 	QString strqresource = "/";
@@ -148,12 +158,13 @@ void QrcFeatureWidget::WriteQRCFile(const QString& strQRCFilePath)
 	foreach(QString file, files) {
 		if (file.contains("png") || file.contains("gif"))
 		{
-
-			QString strWirte = file.remove(0, fileInfo.absolutePath().length());
+            //临时处理+1
+            QString strWirte = file.remove(0, fileInfo.absolutePath().length() + 1);
 			qDebug() << strWirte;
 			out << "\t<file>" << strWirte << "</file>" << "\n";
+            nFileNum++;
+            m_pNumLabel->setText(QString::number(nFileNum));
 		}
-
 	}
 
 	out << "    </qresource>" << "\n";

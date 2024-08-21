@@ -20,7 +20,7 @@ private:
     DragDropLabel* m_pLeftWidget;
     DragDropLabel* m_pRightWidget;
     QList<QUrl> OldurlList;
-     QList<QUrl> m_urlList;
+     QList<QUrl> m_NewurlList;
     QMap<QString, QString> m_MapOldNewName;
 signals:
 

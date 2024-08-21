@@ -27,16 +27,16 @@ bool renameAndMoveFile(const QString &oldFilePath, const QString &newFileName) {
 Widget::Widget(QWidget* parent)
     : QWidget(parent)
 {
-    QString oldFileName = "/home/liangtuqin/img.qrc";
-    QString newFileName = "img2.qrc";
+    // QString oldFileName = "/home/liangtuqin/img.qrc";
+    // QString newFileName = "img2.qrc";
 
-    renameAndMoveFile(oldFileName, newFileName);
+    // renameAndMoveFile(oldFileName, newFileName);
 
-    // QrcFeatureWidget* widhte = new QrcFeatureWidget(this);
-    // widhte->resize(1000,600);
-    // widhte->hide();
-    // CpFileName* Cpwidhte = new CpFileName(this);
-    // Cpwidhte->resize(1000,600);
+    QrcFeatureWidget* widhte = new QrcFeatureWidget(this);
+    widhte->resize(1000,600);
+  // widhte->hide();
+   // CpFileName* Cpwidhte = new CpFileName(this);
+   // Cpwidhte->resize(1000,600);
 
 }
 
