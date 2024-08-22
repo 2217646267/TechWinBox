@@ -26,7 +26,20 @@ void CheckboxWidget::InstallCheckbox(QVector<QString> vet)
         m_checkBoxLayout->addWidget(pCheckBox);
         connect(pCheckBox, &QCheckBox::stateChanged, this, &CheckboxWidget::ClickedItem);
     }
+}
 
+void CheckboxWidget::clearLayout()
+{
+    // 遍历布局中的所有项
+    while (QLayoutItem *item = m_checkBoxLayout->takeAt(0)) {
+        // 如果是一个小部件，移除并销毁它
+        if (QWidget *widget = item->widget()) {
+            widget->setParent(nullptr);  // 断开与布局的连接
+            widget->deleteLater();       // 延迟删除以防止立即销毁
+        }
+        // 删除布局项
+        delete item;
+    }
 }
 
 QString CheckboxWidget::GetCurrentBox()
