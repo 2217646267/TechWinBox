@@ -12,17 +12,24 @@ SOURCES += \
     CheckboxWidget.cpp \
     CpFileName.cpp \
     DragDropLabel.cpp \
+    Language/test1widget.cpp \
     QrcFeatureWidget.cpp \
+    Language/language.cpp \
     main.cpp \
-    widget.cpp
+    widget.cpp \
 
 HEADERS += \
     CheckboxWidget.h \
     CpFileName.h \
     DragDropLabel.h \
+    Language/test1widget.h \
     QrcFeatureWidget.h \
-    widget.h
+    Language/language.h \
+    widget.h\
 
+TRANSLATIONS += translations/zh_CN.ts \
+                translations/en_US.ts \
+                translations/fr_FR.ts  # 新增的法语翻译文件
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin

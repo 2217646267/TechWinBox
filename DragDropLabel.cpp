@@ -1,5 +1,5 @@
 #include "DragDropLabel.h"
-#include <QDebug>)
+#include <QDebug>
 
 DragDropLabel::DragDropLabel(QWidget *parent) : QLabel(parent)
 {
