@@ -14,8 +14,8 @@ Language::Language(QObject *parent)
 
 void Language::InitLanguage()
 {
-    m_EnumMap.insert(HELLO_TEST1,"Hello_111");
-    m_EnumMap.insert(HELLO_TEST2,"Hello_222");
+    m_EnumMap.insert(HELLO_TEST1,tr("Hello_111"));
+    m_EnumMap.insert(HELLO_TEST2,tr("Hello_222"));
 }
 
 void Language::MySet(QObject *obj, LANGUAGE_NUM NumText)
