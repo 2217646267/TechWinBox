@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QTranslator>
 #include <QDebug>
+#include "Language/language.h"
 
 int main(int argc, char *argv[])
 {
@@ -12,10 +13,10 @@ int main(int argc, char *argv[])
     QTranslator translator;
 
     // 指定QM文件路径
-    QString qmFilePath = ":/translations/zh_CN.qm"; // 假设QM文件在资源文件中
-    qDebug() << "Resource path:" << qmFilePath;
+    //QString qmFilePath = "./translations/zh_CN.qm"; // 假设QM文件在资源文件中
+   // qDebug() << "Resource path:" << qmFilePath;
     // 或者使用绝对路径：
-    // QString qmFilePath = "C:/path/to/translations/zh_CN.qm";
+     QString qmFilePath = "/home/liangtuqin/box/TechWinBox/translations/zh_CN.qm";
 
     // 加载QM文件
     if (translator.load(qmFilePath)) {
@@ -25,7 +26,7 @@ int main(int argc, char *argv[])
     } else {
         qWarning() << "Failed to load translation file:" << qmFilePath;
     }
-
+    Language::Update();
     Widget w;
     w.show();
     return a.exec();

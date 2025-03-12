@@ -15,16 +15,15 @@ class Language : public QObject
 {
     Q_OBJECT
 public:
-    explicit Language(QObject *parent = nullptr);
     static void MySet(QObject* obj,LANGUAGE_NUM NumText);
-    void RemoveObj(QObject* obj);
-
+    static void RemoveObj(QObject* obj);
+    static void Update();
 private:
     static QMap<int,QString> m_EnumMap;
+    static void InitLanguage();
+    static QMap<QLabel*, LANGUAGE_NUM> m_pLabelMap;
+    static QMap<QPushButton*,LANGUAGE_NUM> m_pBtnMap;
 
-    static QMap<QString, QLabel*> m_pLabelMap;
-    static QMap<QString, QPushButton*> m_pBtnMap;
-    void InitLanguage();
 signals:
 };
 

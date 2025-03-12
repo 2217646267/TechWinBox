@@ -13,6 +13,7 @@ SOURCES += \
     CpFileName.cpp \
     DragDropLabel.cpp \
     Language/test1widget.cpp \
+    Language/test2widget.cpp \
     QrcFeatureWidget.cpp \
     Language/language.cpp \
     main.cpp \
@@ -23,6 +24,7 @@ HEADERS += \
     CpFileName.h \
     DragDropLabel.h \
     Language/test1widget.h \
+    Language/test2widget.h \
     QrcFeatureWidget.h \
     Language/language.h \
     widget.h\

@@ -5,11 +5,11 @@
     <name>Language</name>
     <message>
         <source>Hello_111</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">测试111</translation>
     </message>
     <message>
         <source>Hello_222</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">测试222</translation>
     </message>
 </context>
 </TS>
