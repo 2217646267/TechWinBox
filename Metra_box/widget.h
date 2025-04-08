@@ -19,12 +19,6 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
-
-private slots:
-    void on_pushButton_clicked();
-
-    void on_pushButton_2_clicked();
-
 private:
     Ui::Widget *ui;
     SerialPort* port = nullptr;
@@ -34,8 +28,12 @@ private:
     void initConnect();
     void initGaugeConnect();
     void initVechicleConnect();
+    void initPaikingConnect();
+    void initParkingAssistConnect();
+    void initSwCButtonConnect();
     QMap<QRadioButton*,int> m_vechMap;
     QButtonGroup *buttonGroup;
     QButtonGroup *buttonGroup_2;
+
 };
 #endif // WIDGET_H

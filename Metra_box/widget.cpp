@@ -55,6 +55,9 @@ void Widget::init()
     initConnect();
     initGaugeConnect();
     initVechicleConnect();
+    initPaikingConnect();
+    initParkingAssistConnect();
+    initSwCButtonConnect();
 }
 
 void Widget::initConnect()
@@ -300,46 +303,178 @@ void Widget::initVechicleConnect()
      });
 
 }
-void Widget::on_pushButton_clicked()
+
+void Widget::initPaikingConnect()
 {
-    QString str  = "?";
-    QByteArray aa = QByteArray::fromHex(QString("0x3F").toUtf8());
-    QByteArray data;
-    data.append(0x3F);   // 问号的ASCII码
-    data.append(0x0D);   // CR的ASCII码
-    data.append(0x0A);   // LF的ASCII码
-    port->writeData(data);
+    QButtonGroup * parkingbuttonGroup = new QButtonGroup(this);
+    parkingbuttonGroup->addButton(ui->FL_Outer);
+    parkingbuttonGroup->addButton(ui->FL_Inner);
+    parkingbuttonGroup->addButton(ui->FR_Inner);
+    parkingbuttonGroup->addButton(ui->FR_Outer);
+    parkingbuttonGroup->addButton(ui->RL_Outer);
+    parkingbuttonGroup->addButton(ui->RL_Inner);
+    parkingbuttonGroup->addButton(ui->RR_Inner);
+    parkingbuttonGroup->addButton(ui->RR_Outer);
+    parkingbuttonGroup->addButton(ui->L_Blind_spot);
+    parkingbuttonGroup->addButton(ui->R_Blind_spot);
+
+    // 连接buttonToggled信号到槽函数
+    connect(parkingbuttonGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled),
+            [=](QAbstractButton *button, bool checked){
+                qDebug() << "Button" << button->text()
+                         << "toggled to state:" << (checked ? "Checked" : "Unchecked");
+        QString str = "";
+        QString strValue = "";
+        if (parkingbuttonGroup->checkedButton() == ui->FL_Outer) {
+            str = "EID 2a 04 01";
+         }
+        else if (parkingbuttonGroup->checkedButton() == ui->FL_Inner) {
+             str = "EID 2a 04 02";
+        }
+         else if (parkingbuttonGroup->checkedButton() == ui->FR_Inner) {
+             str = "EID 2a 04 03";
+         }
+        else if (parkingbuttonGroup->checkedButton() == ui->FR_Outer) {
+            str = "EID 2a 04 04";
+        }
+         else if (parkingbuttonGroup->checkedButton() == ui->RL_Outer) {
+             str = "EID 2a 04 05";
+         }
+        else if (parkingbuttonGroup->checkedButton() == ui->RL_Inner) {
+            str = "EID 2a 04 06";
+        }
+         else if (parkingbuttonGroup->checkedButton() == ui->RR_Inner) {
+             str = "EID 2a 04 07";
+         }
+        else if (parkingbuttonGroup->checkedButton() == ui->RR_Outer) {
+            str = "EID 2a 04 08";
+        }
+         else if (parkingbuttonGroup->checkedButton() == ui->L_Blind_spot) {
+             str = "EID 2a 04 09";
+         }
+        else if (parkingbuttonGroup->checkedButton() == ui->R_Blind_spot) {
+            str = "EID 2a 04 0A";
+        }
+        strValue = ui->lineEdit->text();
+        qDebug() << "-----------" <<str;
+        SendData(str);
+        SendData(QString("EID 2a 05 0%1").arg(strValue));
+        SendData("SID 2a");
+    });
 }
 
-
-void Widget::on_pushButton_2_clicked()
+void Widget::initParkingAssistConnect()
 {
-    QByteArray data;
-    QString str = "EID 19 12 01";
-    for (int i = 0; i < str.length(); ++i) {
-        data.append(static_cast<char>(str[i].toLatin1()));
-    }
-    data.append(0x0D);   // CR的ASCII码
-    data.append(0x0A);   // LF的ASCII码
-    port->writeData(data);
+    QButtonGroup * parkingbuttonGroup = new QButtonGroup(this);
+    parkingbuttonGroup->addButton(ui->Vehicle_Properties);
+    parkingbuttonGroup->addButton(ui->HVAC);
+    parkingbuttonGroup->addButton(ui->Customization_menu);
+    parkingbuttonGroup->addButton(ui->Home);
+    parkingbuttonGroup->addButton(ui->Radio_settings);
 
-    QByteArray data3;
-    QString str3 = "EID 19 13 5E";
-    for (int i = 0; i < str3.length(); ++i) {
-        data3.append(static_cast<char>(str3[i].toLatin1()));
-    }
-    data3.append(0x0D);   // CR的ASCII码
-    data3.append(0x0A);   // LF的ASCII码
-    port->writeData(data3);
-
-
-    QByteArray data2;
-    QString str2 = "SID 19";
-    for (int i = 0; i < str2.length(); ++i) {
-        data2.append(static_cast<char>(str2[i].toLatin1()));
-    }
-    data2.append(0x0D);   // CR的ASCII码
-    data2.append(0x0A);   // LF的ASCII码
-    port->writeData(data2);
+    // 连接buttonToggled信号到槽函数
+    connect(parkingbuttonGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled),
+            [=](QAbstractButton *button, bool checked){
+                qDebug() << "Button" << button->text()
+                         << "toggled to state:" << (checked ? "Checked" : "Unchecked");
+                QString str = "";
+                QString strValue = "";
+                if (parkingbuttonGroup->checkedButton() == ui->Vehicle_Properties) {
+                    str = "EID 17 04 01";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->HVAC) {
+                    str = "EID 17 04 02";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->Customization_menu) {
+                    str = "EID 17 04 03";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->Home) {
+                    str = "EID 17 04 04";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->Radio_settings) {
+                    str = "EID 17 04 05";
+                }
+                qDebug() << "-----------" <<str;
+                SendData(str);
+                SendData("SID 17");
+            });
 }
 
+void Widget::initSwCButtonConnect()
+{
+    QButtonGroup * parkingbuttonGroup = new QButtonGroup(this);
+    parkingbuttonGroup->addButton(ui->VOLUP);
+    parkingbuttonGroup->addButton(ui->VOLDWN);
+    parkingbuttonGroup->addButton(ui->SEEKU);
+    parkingbuttonGroup->addButton(ui->SEEKD);
+    parkingbuttonGroup->addButton(ui->MODE);
+    parkingbuttonGroup->addButton(ui->MUTE);
+    parkingbuttonGroup->addButton(ui->PRESETU);
+    parkingbuttonGroup->addButton(ui->PRESETD);
+
+    parkingbuttonGroup->addButton(ui->PWR);
+    parkingbuttonGroup->addButton(ui->BAND);
+    parkingbuttonGroup->addButton(ui->PLAY_ENT);
+    parkingbuttonGroup->addButton(ui->PTT);
+    parkingbuttonGroup->addButton(ui->ONHOOK);
+    parkingbuttonGroup->addButton(ui->OFFHOOk);
+    parkingbuttonGroup->addButton(ui->Screen_Off);
+
+    // 连接buttonToggled信号到槽函数
+    connect(parkingbuttonGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled),
+            [=](QAbstractButton *button, bool checked){
+                qDebug() << "Button" << button->text()
+                         << "toggled to state:" << (checked ? "Checked" : "Unchecked");
+                QString str = "";
+                SendData("EID 08 04 00");
+                SendData("EID 08 05 00");
+                if (parkingbuttonGroup->checkedButton() == ui->VOLUP) {
+                    str = "EID 08 04 80";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->VOLDWN) {
+                    str = "EID 08 04 40";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->SEEKU) {
+                    str = "EID 08 04 20";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->SEEKD) {
+                    str = "EID 08 04 10";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->MODE) {
+                    str = "EID 08 04 08";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->MUTE) {
+                    str = "EID 08 04 04";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->PRESETU) {
+                    str = "EID 08 04 02";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->PRESETD) {
+                    str = "EID 08 04 01";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->PWR) {
+                    str = "EID 08 05 80";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->BAND) {
+                    str = "EID 08 05 40";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->PLAY_ENT) {
+                    str = "EID 08 05 20";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->PTT) {
+                    str = "EID 08 05 10";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->ONHOOK) {
+                    str = "EID 08 05 08";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->OFFHOOk) {
+                    str = "EID 08 05 04";
+                }
+                else if (parkingbuttonGroup->checkedButton() == ui->Screen_Off) {
+                    str = "EID 08 05 02";
+                }
+                qDebug() << "-----------" <<str;
+                SendData(str);
+                SendData("SID 08");
+            });
+}
