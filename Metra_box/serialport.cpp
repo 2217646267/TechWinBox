@@ -21,11 +21,12 @@ bool SerialPort::isOpen() {
     return (serial && serial->isOpen());
 }
 
-void listAvailablePorts() {
+void SerialPort::listAvailablePorts() {
     QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
     qDebug() << "可用串口列表：";
     for (const QSerialPortInfo &port : ports) {
         qDebug() << "串口名称：" << port.portName();
+        emit onSendportName(port.portName());
         qDebug() << "描述：" << port.description();
         qDebug() << "制造商：" << port.manufacturer();
         qDebug() << "----------------------------------------";
@@ -35,7 +36,7 @@ void listAvailablePorts() {
 bool SerialPort::open(QString portName, int baudRate) {
 
     qDebug() << "正在检查串口" << portName << "是否存在...";
-    //listAvailablePorts();
+    listAvailablePorts();
     QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
     bool portExists = false;
     for (const QSerialPortInfo &port : ports) {

@@ -22,7 +22,7 @@ signals:
     void disconnected();
     void read(QByteArray data);
     void status(QString msg);
-
+    void onSendportName(QString portName);
 public slots:
     bool open(QString portName = QString(), int baudRate = QSerialPort::Baud9600);
     void close();
@@ -40,7 +40,7 @@ public slots:
 
 private:
     void writePort(const QByteArray & data);
-
+    void listAvailablePorts();
 private:
     QThread myThread;
     QSerialPort *serial;

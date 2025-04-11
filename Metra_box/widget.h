@@ -31,9 +31,9 @@ private:
     void initPaikingConnect();
     void initParkingAssistConnect();
     void initSwCButtonConnect();
+    void initInfoWidget();
+    void onButtonClicked(QAbstractButton *button);
     QMap<QRadioButton*,int> m_vechMap;
-    QButtonGroup *buttonGroup;
-    QButtonGroup *buttonGroup_2;
 
 };
 #endif // WIDGET_H

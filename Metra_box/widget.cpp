@@ -58,27 +58,36 @@ void Widget::init()
     initPaikingConnect();
     initParkingAssistConnect();
     initSwCButtonConnect();
+    initInfoWidget();
 }
 
 void Widget::initConnect()
 {
     connect(ui->open_btn,&QPushButton::clicked, this, [=](){
-        bool bOpen = port->open("ttyUSB0",115200);
+
+        bool bOpen = port->open(ui->lineEdit_3->text(),115200);
         bOpen == true ? ui->open_btn->setText("Ok") : ui->open_btn->setText("error");
         qDebug() << bOpen;
     });
+    connect(port, &SerialPort::onSendportName,[=](QString portname)
+    {
+        ui->plainTextEdit->appendPlainText(portname);
+    });
     connect(port, &SerialPort::read,[=](QByteArray data){
         QString string = QString::fromUtf8(data);
-        //ui->textEdit->clear();
-        ui->textEdit->append(string);
+        //ui->plainTextEdit->clear();
+        ui->plainTextEdit->appendPlainText(string);
         // qDebug() << string;
 
     });
     connect(ui->clear_edit,&QPushButton::clicked, this, [=](){
-        ui->textEdit->clear();
+        ui->plainTextEdit->clear();
     });
     connect(ui->close_btn,&QPushButton::clicked, this, [=](){
         port->close();
+    });
+    connect(ui->about_btn,&QPushButton::clicked, this, [=](){
+        SendData("?");
     });
 }
 
@@ -196,13 +205,23 @@ void Widget::initVechicleConnect()
     m_vechMap.insert(ui->Temp_RR, 43);
     m_vechMap.insert(ui->Temp_LR, 44);
 
-    buttonGroup = new QButtonGroup(this);
+     QButtonGroup *buttonGroup = new QButtonGroup(this);
     QMapIterator<QRadioButton*,int> it(m_vechMap);
     while (it.hasNext()) {
         it.next();
         buttonGroup->addButton(it.key(),it.value());
     }
     buttonGroup->addButton(ui->battery);
+    ui->Malfunction_Indicator->setCheckable(true);
+    connect(ui->Malfunction_Indicator,&QPushButton::clicked, this,[=](bool b)
+            {
+
+        QString strdata = QString("EID 06 1f 0%1").arg(b);
+                SendData(strdata);
+                SendData("SID 06");
+                qDebug() << "-----------" <<strdata;
+            });
+
     connect(ui->VechicleSlider,&QSlider::sliderReleased, this, [=](){
         qDebug() << "-----------" << ui->VechicleSlider->value();
         QString str = "";
@@ -260,11 +279,10 @@ void Widget::initVechicleConnect()
             QString strdata2 = QString("EID %1 %2 %3").arg(strID).arg(str).arg(str2);
             SendData(strdata2);
             SendData(QString("SID %1").arg(strID));
-        }
-
+        }        
     });
 
-    buttonGroup_2 = new QButtonGroup(this);
+    QButtonGroup *buttonGroup_2 = new QButtonGroup(this);
     buttonGroup_2->addButton(ui->door_F);
     buttonGroup_2->addButton(ui->door_LF);
     buttonGroup_2->addButton(ui->door_LR);
@@ -477,4 +495,24 @@ void Widget::initSwCButtonConnect()
                 SendData(str);
                 SendData("SID 08");
             });
+}
+
+void Widget::onButtonClicked(QAbstractButton *button) {
+    SendData(button->text());
+    qDebug() << "-----------" << button->text();
+}
+
+void Widget::initInfoWidget()
+{
+    QButtonGroup * parkingbuttonGroup = new QButtonGroup(this);
+    parkingbuttonGroup->addButton(ui->pushButton_3);
+    parkingbuttonGroup->addButton(ui->pushButton_2);
+    parkingbuttonGroup->addButton(ui->pushButton);
+    parkingbuttonGroup->addButton(ui->pushButton_4);
+    parkingbuttonGroup->addButton(ui->pushButton_5);
+    parkingbuttonGroup->addButton(ui->pushButton_6);
+    parkingbuttonGroup->addButton(ui->about_btn);
+    connect(parkingbuttonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
+            this, &Widget::onButtonClicked);
+
 }
