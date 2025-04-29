@@ -59,6 +59,8 @@ void Widget::init()
     initParkingAssistConnect();
     initSwCButtonConnect();
     initInfoWidget();
+
+
 }
 
 void Widget::initConnect()
@@ -514,5 +516,21 @@ void Widget::initInfoWidget()
     parkingbuttonGroup->addButton(ui->about_btn);
     connect(parkingbuttonGroup, QOverload<QAbstractButton *>::of(&QButtonGroup::buttonClicked),
             this, &Widget::onButtonClicked);
+
+    connect(ui->R_btn,&QPushButton::clicked,this, [=]()
+{
+        SendData(ui->R_btn->text());
+});
+
+    connect(ui->H_btn,&QPushButton::clicked,this, [=]()
+{
+    SendData(ui->H_btn->text());
+});
+
+connect(ui->RAW_btn,&QPushButton::clicked,this, [=]()
+        {
+            SendData(ui->RAW_btn->text());
+        });
+
 
 }
