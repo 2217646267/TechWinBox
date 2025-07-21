@@ -304,6 +304,13 @@
      </widget>
     </item>
     <item>
+     <widget class="QLabel" name="current_label">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QWidget" name="widget_3" native="true">
       <layout class="QHBoxLayout" name="horizontalLayout_6">
        <item>
@@ -903,6 +910,19 @@
    </property>
    <property name="text">
     <string>RAW</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="time">
+   <property name="geometry">
+    <rect>
+     <x>960</x>
+     <y>620</y>
+     <width>181</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>2024年4月5日 12:12:12</string>
    </property>
   </widget>
  </widget>

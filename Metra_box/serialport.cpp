@@ -15,6 +15,10 @@ SerialPort::SerialPort(QObject* parent) : QObject(parent) {
     serial = new QSerialPort(this);
     sendTmr.setInterval(50);
     connect(&sendTmr, SIGNAL(timeout()), SLOT(onSendTmrout()));
+
+#ifndef TEST_DEF
+    qDebug() << "11111";
+#endif
 }
 
 bool SerialPort::isOpen() {
