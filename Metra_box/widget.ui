@@ -279,8 +279,8 @@
     <rect>
      <x>630</x>
      <y>250</y>
-     <width>521</width>
-     <height>221</height>
+     <width>531</width>
+     <height>271</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -304,7 +304,21 @@
      </widget>
     </item>
     <item>
-     <widget class="QLabel" name="current_label">
+     <widget class="QLabel" name="current_label_press">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="current_label_Tmod">
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="current_label_MIL">
       <property name="text">
        <string/>
       </property>
@@ -922,7 +936,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>2024年4月5日 12:12:12</string>
+    <string>24年4月5日 12:12:12</string>
    </property>
   </widget>
  </widget>

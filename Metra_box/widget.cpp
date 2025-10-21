@@ -47,11 +47,12 @@ void Widget::SendData(QString strdata)
 
 void Widget::init()
 {
-    ui->transmissionTemperature_slider->setMaximum(250);
-    ui->Coolant_Temperature_slider->setMaximum(250);
-    ui->Intake_Air_Temperature_slider->setMaximum(250);
-    ui->Engine_Calculated_Load_slider->setMaximum(100);
-    ui->RPM_slider->setMaximum(10000);
+    ui->transmissionTemperature_slider->setMaximum(251);
+    ui->Coolant_Temperature_slider->setMaximum(251);
+    ui->Intake_Air_Temperature_slider->setMaximum(251);
+    ui->Engine_Calculated_Load_slider->setMaximum(101);
+    ui->RPM_slider->setMaximum(10001);
+    ui->VechicleSlider->setMaximum(255);
     initConnect();
     initGaugeConnect();
     initVechicleConnect();
@@ -90,6 +91,22 @@ void Widget::initConnect()
     });
     connect(ui->about_btn,&QPushButton::clicked, this, [=](){
         SendData("?");
+    });
+    connect(ui->time,&QPushButton::clicked, this, [=](){
+        SendData("EID 06 0F 32");
+        SendData("EID 06 10 34");
+        SendData("EID 06 11 30");
+        SendData("EID 06 12 34");
+        SendData("EID 06 13 30");
+        SendData("EID 06 14 35");
+        SendData("EID 06 15 31");
+        SendData("EID 06 16 32");
+        SendData("EID 06 17 31");
+        SendData("EID 06 18 32");
+        SendData("EID 06 19 31");
+        SendData("EID 06 1A 32");
+
+        SendData("SID 06");
     });
 }
 
@@ -226,40 +243,51 @@ void Widget::initVechicleConnect()
 
     connect(ui->VechicleSlider,&QSlider::sliderReleased, this, [=](){
         qDebug() << "-----------" << ui->VechicleSlider->value();
+        ui->current_label_press->clear();
+        ui->current_label_Tmod->clear();
+        ui->current_label_MIL->clear();
         QString str = "";
         QString strID = "";
         if (buttonGroup->checkedButton() == ui->Press_LF) {
             str =  QString("%1").arg(m_vechMap.value(ui->Press_LF), 2, 16, QLatin1Char('0'));
-            strID = 06;
+            strID = "06";
+             ui->current_label_press->setText("当前胎压:"+QString::number(ui->VechicleSlider->value()));
         } else if (buttonGroup->checkedButton() == ui->Press_RF) {
-            str =  QString("%1").arg(m_vechMap.value(ui->Press_LF), 2, 16, QLatin1Char('0'));
-            strID = 06;
+            str =  QString("%1").arg(m_vechMap.value(ui->Press_RF), 2, 16, QLatin1Char('0'));
+            strID = "06";
+             ui->current_label_press->setText("当前胎压:"+QString::number(ui->VechicleSlider->value()));
 
         } else if (buttonGroup->checkedButton() == ui->Press_RR) {
             str =  QString("%1").arg(m_vechMap.value(ui->Press_RR), 2, 16, QLatin1Char('0'));
-            strID = 06;
+            strID = "06";
+             ui->current_label_press->setText("当前胎压:"+QString::number(ui->VechicleSlider->value()));
 
         } else if (buttonGroup->checkedButton() == ui->Press_LR) {
             str =  QString("%1").arg(m_vechMap.value(ui->Press_LR), 2, 16, QLatin1Char('0'));
-            strID = 06;
+            strID = "06";
+            ui->current_label_press->setText("当前胎压:"+QString::number(ui->VechicleSlider->value()));
 
         } else if (buttonGroup->checkedButton() == ui->Temp_LF) {
             str =  QString("%1").arg(m_vechMap.value(ui->Temp_LF), 2, 16, QLatin1Char('0'));
-            strID = 19;
+            strID = "19";
+            ui->current_label_Tmod->setText("当前胎温:"+QString::number(ui->VechicleSlider->value() - 40));
 
         } else if (buttonGroup->checkedButton() == ui->Temp_RF) {
             str =  QString("%1").arg(m_vechMap.value(ui->Temp_RF), 2, 16, QLatin1Char('0'));
-            strID = 19;
-
+            strID = "19";
+            ui->current_label_Tmod->setText("当前胎温:"+QString::number(ui->VechicleSlider->value() - 40));
         } else if (buttonGroup->checkedButton() == ui->Temp_RR) {
             str =  QString("%1").arg(m_vechMap.value(ui->Temp_RR), 2, 16, QLatin1Char('0'));
-            strID = 19;
-
+            strID = "19";
+            ui->current_label_Tmod->setText("当前胎温:"+QString::number(ui->VechicleSlider->value() - 40));
         } else if (buttonGroup->checkedButton() == ui->Temp_LR) {
             str =  QString("%1").arg(m_vechMap.value(ui->Temp_LR), 2, 16, QLatin1Char('0'));
-            strID = 19;
+            strID = "19";
+            ui->current_label_Tmod->setText("当前胎温:"+QString::number(ui->VechicleSlider->value() - 40));
         } else if (buttonGroup->checkedButton() == ui->battery) {
+
             int decimal_input = ui->VechicleSlider->value() * 100;
+            ui->current_label_MIL->setText("当前电池:"+QString::number(decimal_input/10));
             auto hex_pairs = find_hex_pairs(decimal_input);
             // 输出所有可能的十六进制数对
             for (const auto& pair : hex_pairs) {
@@ -272,15 +300,22 @@ void Widget::initVechicleConnect()
                 SendData(strdata2);
                 SendData("SID 19");
             }
+
         }
+        qDebug() << "---- 444444-------" <<strID;
         if(buttonGroup->checkedButton() != ui->battery)
             {
             int decimal_input = ui->VechicleSlider->value();
+             qDebug() << "---- 555555-------" <<strID;
             QString str2 =  QString("%1").arg(decimal_input, 2, 16, QLatin1Char('0'));
             qDebug() << "-----------" << str<< str2;
             QString strdata2 = QString("EID %1 %2 %3").arg(strID).arg(str).arg(str2);
+
             SendData(strdata2);
             SendData(QString("SID %1").arg(strID));
+            qDebug() << "---- 77777-------" <<strdata2;
+            qDebug() << "---- 88888-------" <<QString("SID %1").arg(strID) << strID;
+
         }        
     });
 
@@ -343,6 +378,13 @@ void Widget::initPaikingConnect()
             [=](QAbstractButton *button, bool checked){
                 qDebug() << "Button" << button->text()
                          << "toggled to state:" << (checked ? "Checked" : "Unchecked");
+        QString string = "传感器值由 Metra 接口以厘米为单位发送。主机应根据距离值决定点亮多少个 GUI 元素：\n\
+                                 阈值由主机自行设定，建议如下：\n\
+                                 ≤30 cm – 障碍物非常近\n\
+                                 30 cm–90 cm – 障碍物中等距离\n\
+                                 91 cm–150 cm – 障碍物较远\n\
+                                 ＞150 cm – 无障碍物";
+        ui->plainTextEdit->appendPlainText(string);
         QString str = "";
         QString strValue = "";
         if (parkingbuttonGroup->checkedButton() == ui->FL_Outer) {
@@ -376,9 +418,14 @@ void Widget::initPaikingConnect()
             str = "EID 2a 04 0A";
         }
         strValue = ui->lineEdit->text();
-        qDebug() << "-----------" <<str;
+        bool ok = false;
+        int intValue =  ui->lineEdit->text().toInt(&ok);
+      //  strValue = strValue, 2, 16, QLatin1Char('0');
+        strValue =  QString("%1").arg(intValue, 2, 16, QLatin1Char('0'));
         SendData(str);
-        SendData(QString("EID 2a 05 0%1").arg(strValue));
+        QString hex = QString::number(intValue, 16).toUpper();
+        qDebug() << "-----------" <<str << intValue << hex << strValue;
+        SendData(QString("EID 2a 05 %1").arg(strValue));
         SendData("SID 2a");
     });
 }
@@ -441,10 +488,10 @@ void Widget::initSwCButtonConnect()
     parkingbuttonGroup->addButton(ui->Screen_Off);
 
     // 连接buttonToggled信号到槽函数
-    connect(parkingbuttonGroup, QOverload<QAbstractButton*, bool>::of(&QButtonGroup::buttonToggled),
-            [=](QAbstractButton *button, bool checked){
+    connect(parkingbuttonGroup, QOverload<QAbstractButton*>::of(&QButtonGroup::buttonClicked),
+            [=](QAbstractButton *button){
                 qDebug() << "Button" << button->text()
-                         << "toggled to state:" << (checked ? "Checked" : "Unchecked");
+                         /*<< "toggled to state:" << (checked ? "Checked" : "Unchecked")*/;
                 QString str = "";
                 SendData("EID 08 04 00");
                 SendData("EID 08 05 00");
@@ -534,3 +581,5 @@ connect(ui->RAW_btn,&QPushButton::clicked,this, [=]()
 
 
 }
+
+

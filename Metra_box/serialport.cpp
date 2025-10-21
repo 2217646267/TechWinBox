@@ -81,8 +81,8 @@ bool SerialPort::open(QString portName, int baudRate) {
         serial->clearError();
         serial->clear();
         connect(serial, &QSerialPort::readyRead, this, &SerialPort::onReadyRead);
-        connect(serial, QOverload<QSerialPort::SerialPortError>::of(&QSerialPort::error),
-                this, &SerialPort::handleError);
+        // connect(serial, QOverload<QSerialPort::SerialPortError>::of(&QSerialPort::error),
+        //         this, &SerialPort::handleError);
         emit connected(portName);
         return true;
     } else {
@@ -104,7 +104,7 @@ void SerialPort::close() {
 void SerialPort::writeData(const QString str)
 {
     QByteArray data;
-    data.append(str);
+    data.append(str.toUtf8());
     writeData(data);
 }
 
