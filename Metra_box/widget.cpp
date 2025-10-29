@@ -8,7 +8,6 @@ Widget::Widget(QWidget *parent)
 {
     ui->setupUi(this);
     port = new SerialPort(this);
-
     init();
 }
 
@@ -47,6 +46,8 @@ void Widget::SendData(QString strdata)
 
 void Widget::init()
 {
+    this->setFixedSize(1182,826);
+    this->setWindowTitle("Metra_tools");
     ui->transmissionTemperature_slider->setMaximum(251);
     ui->Coolant_Temperature_slider->setMaximum(251);
     ui->Intake_Air_Temperature_slider->setMaximum(251);
