@@ -5,6 +5,9 @@
 #include <QPushButton>
 #include <QLabel>
 #include <QBoxLayout>
+#include <QGridLayout>
+#include <QGroupBox>
+#include <QMap>
 #include <QTranslator>
 #include "test2widget.h"
 
@@ -19,8 +22,10 @@ private:
     QLabel* m_pNumLabel = nullptr;
     QLabel* m_pLangugeLabel = nullptr;
     QLabel *m_pNumLabel3 = nullptr;
+    QMap<QPushButton*, QString> m_langBtnMap;   // 语言切换按钮 -> 语言代码
     void setLanguage(const QString& languageCode);
     void loadTranslation(QString str);
+    void setupLanguageButtons(QGridLayout* layout);   // 批量创建语言按钮
     QTranslator m_translator;
     QString m_currentLang;
     test2widget * testwidget2 = nullptr;

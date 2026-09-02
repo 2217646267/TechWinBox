@@ -10,7 +10,13 @@ enum LANGUAGE_NUM
 {
     HELLO_TEST1 = 0,
     HELLO_TEST2,
+    HELLO_TEST3,
+    HELLO_TEST4,
+    HELLO_TEST5,
+    HELLO_TEST6,
+    HELLO_TEST7,
 };
+
 class Language : public QObject
 {
     Q_OBJECT
@@ -23,7 +29,6 @@ private:
     static void InitLanguage();
     static QMap<QLabel*, LANGUAGE_NUM> m_pLabelMap;
     static QMap<QPushButton*,LANGUAGE_NUM> m_pBtnMap;
-
 signals:
 };
 

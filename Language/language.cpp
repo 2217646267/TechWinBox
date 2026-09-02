@@ -9,6 +9,13 @@ void Language::InitLanguage()
 {
     m_EnumMap.insert(HELLO_TEST1,tr("Hello_111"));
     m_EnumMap.insert(HELLO_TEST2,tr("Hello_222"));
+    m_EnumMap.insert(HELLO_TEST2,tr("Hello_444"));
+    m_EnumMap.insert(HELLO_TEST3,tr("Hello_333"));
+    m_EnumMap.insert(HELLO_TEST4,tr("Hello_555"));
+    m_EnumMap.insert(HELLO_TEST4,tr("Hello_666"));
+    m_EnumMap.insert(HELLO_TEST5,tr("Hello_777"));
+    m_EnumMap.insert(HELLO_TEST6,tr("Hello_888"));
+    m_EnumMap.insert(HELLO_TEST6,tr("Hello_999"));
     qDebug() <<"MyTr" <<tr("Hello_111");
     qDebug() <<"MyTr"  <<tr("Hello_222");
 }
@@ -19,6 +26,7 @@ void Language::MySet(QObject *obj, LANGUAGE_NUM NumText)
     if (obj->metaObject()->className() == QLatin1String("QLabel")) {
         QLabel* label = qobject_cast<QLabel*>(obj);
         if (label && m_EnumMap.contains(NumText)) {
+
             label->setText(m_EnumMap.value(NumText));  // 调用 QLabel 的接口
            /* if(m_EnumMap.value(NumText).contains("Hello"))
             {
@@ -69,7 +77,9 @@ void Language::RemoveObj(QObject *obj)
         if(label != nullptr && m_pLabelMap.contains(label))
         {
             delete label;
+            label = nullptr;
             delete obj;
+            obj = nullptr;
         }
     }
 }

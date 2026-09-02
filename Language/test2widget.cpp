@@ -25,7 +25,7 @@ test2widget::test2widget(QWidget *parent)
     m_pLangugeLabel= new QLabel("0",this);
     m_pLangugeLabel->resize(800,50);
     m_pLangugeLabel->setWordWrap(true);
-    Language::MySet(m_pLangugeLabel, HELLO_TEST2);
+    Language::MySet(m_pLangugeLabel, HELLO_TEST3);
 
     m_pZhBtn = new QPushButton(this);
     m_pZhBtn->resize(100, 100);
